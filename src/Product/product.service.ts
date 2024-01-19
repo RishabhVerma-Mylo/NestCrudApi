@@ -1,45 +1,44 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Product, ProductDocument } from './product.schema';
-import { Model } from 'mongoose';
-import { CreateClassDto } from 'src/Interface/create-product';
+import { Injectable } from '@nestjs/common'
+import { Product } from './product.entity'
+import { Model } from 'mongoose'
+import { CreateClassDto } from 'src/Interface/create-product'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
 
 @Injectable()
 export class ProductService {
   constructor(
-    @InjectModel(Product.name) private productModel: Model<Product>,
+    @InjectRepository(Product) private productModel: Repository<Product>
   ) {}
 
   async findAll(): Promise<Product[]> {
-    return this.productModel.find().exec();
+    return this.productModel.find()
   }
 
-  async findOne(findId: string): Promise<Product> {
-    return this.productModel.findOne({ id: findId }).exec();
+  async findOne(id: number): Promise<Product> {
+    return this.productModel.findOneBy({ id })
   }
 
   async create(createProduct: CreateClassDto): Promise<Product> {
-    const id: string = String(Date.now() + Math.random()) as string;
-    const createdProduct = new this.productModel({ id, ...createProduct });
-    return createdProduct.save();
+    const id: string = String(Date.now() + Math.random()) as string
+    const createdProduct = this.productModel.create(createProduct)
+    return this.productModel.save(createdProduct, { reload: true })
   }
 
-  async update(findId: string, newProduct: CreateClassDto): Promise<Product> {
+  async update(findId: number, newProduct: CreateClassDto): Promise<Product> {
     try {
       // console.log(findId, newProduct);
-      const updatedProduct = await this.productModel.findOneAndUpdate(
-        { id: findId },
-        newProduct,
-        { new: true },
-      );
+      const oldProduct = await this.productModel.findOneBy({ id: findId })
       // console.log(updatedProduct);
-      return updatedProduct;
+      const updatedProduct = { ...newProduct, id: oldProduct.id }
+      return updatedProduct
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
-  async delete(findId: string) {
-    return this.productModel.findOneAndDelete({ id: findId });
+  async delete(findId: number): Promise<Product> {
+    const oldProduct = await this.productModel.findOneBy({ id: findId })
+    return this.productModel.remove(oldProduct)
   }
 }
