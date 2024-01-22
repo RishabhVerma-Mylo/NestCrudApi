@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common'
 import { ProductService } from './product.service'
 import { Product } from './product.entity'
-import { ProductType } from 'src/Interface/create-product'
 
 @Controller('products')
 export class ProductController {

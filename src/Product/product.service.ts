@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { Product } from './product.entity'
-import { Model } from 'mongoose'
-import { CreateClassDto } from 'src/Interface/create-product'
+import { CreateClassDto } from 'src/dto/create-product'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
