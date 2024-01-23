@@ -5,4 +5,7 @@ export class signInDto {
 
 export class CreateUserDto extends signInDto {
   name: string
+  city: string
+  company: string
+  status: string
 }

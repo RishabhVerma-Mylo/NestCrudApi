@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule } from '@nestjs/config'
 
 import { Product } from './Product/product.entity'
-import { AuthModule } from './auth/auth.module'
 import { UsersModule } from './users/users.module'
 import { User } from './users/users.entity'
 import { config } from './config/config'
@@ -18,7 +17,6 @@ import { config } from './config/config'
       load: [config],
     }),
     ProductsModule,
-    AuthModule,
     UsersModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
