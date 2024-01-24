@@ -17,11 +17,12 @@ export class AuthMiddleware implements NestMiddleware {
       const [type, token] = req.headers.authorization.split(' ') ?? []
       if (!(token && type == 'Bearer')) throw new UnauthorizedException()
 
+      // console.log(token)
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       })
 
-      console.log(payload)
+      // console.log(payload)
       req['id'] = payload.id
       next()
     } catch (error) {
